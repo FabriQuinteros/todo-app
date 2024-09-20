@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# Shopping List App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple shopping list application built with React, applying fundamental concepts such as component-oriented design, parameterization, and state management.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Add Items**: Users can input an item and add it to the shopping list with a simple form and button. The input is cleared after each addition to streamline further item entries.
+  
+- **Validation**: Items cannot be added if the input field is empty, ensuring valid entries.
 
-### `npm start`
+- **View Shopping List**: Display a list of all the items added by the user.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Remove Items**: Users can delete items from the shopping list with a simple click.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Edit Items**: Items in the list can be edited, allowing users to modify the name or quantity of the item.
 
-### `npm test`
+- **Quantity Input**: For each item, users can specify a quantity. It validates that the quantity is positive and greater than zero.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Mark as Purchased**: Items can be marked as "purchased," at which point they will appear crossed out and move to the end of the list.
 
-### `npm run build`
+- **Unmark Purchased Items**: Users can also unmark purchased items, moving them back to the list of unpurchased items in the last available spot.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Multiple Lists**: The app supports multiple shopping lists, with tabs to switch between them. Each list can be assigned a different color.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Technologies Used
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **React**: For building the user interface and managing component states.
+- **Material-UI**: For styling the components and ensuring a responsive design.
 
-### `npm run eject`
+## Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Clone the repository:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   git clone https://github.com/yourusername/shopping-list-app.git
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. Navigate to the project directory:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```bash
+   cd shopping-list-app
+   ```
 
-## Learn More
+3. Install the dependencies:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```bash
+    npm install
+    ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. Run the application:
 
-### Code Splitting
+   ```bash
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Usage
 
-### Analyzing the Bundle Size
+- Open the app in your browser and start adding items to your shopping list.
+- Manage your lists by adding, editing, deleting, and marking items as purchased or unpurchased.
+- Switch between different shopping lists using the tabbed interface, and customize each list with a unique color.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Live Demo
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Try the application live at [Live Demo Link](https://fabriquinteros.github.io/todo-app)

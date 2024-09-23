@@ -1,10 +1,13 @@
 import { Box, IconButton, Tab, Tabs } from "@mui/material";
 import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ItemHandler } from "./ItemHandler";
 
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, Toolbar, Typography } from '@mui/material';
 
@@ -17,8 +20,9 @@ export const ListManager = () => {
     });
 
     const [collapsed, setCollapsed] = useState(false);
-    const [currentListId, setCurrentListId] = useState(lists[0].id);
+    const [currentListId, setCurrentListId] = useState(lists[0]?.id);
     const [addListModalOpen, setAddListModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const getIncompleteTodosCount = (listId) => {
         const savedTodos = localStorage.getItem(`todos-${listId}`);
@@ -45,6 +49,22 @@ export const ListManager = () => {
         setCurrentListId(newList.id);
     };
 
+    const deleteList = () => {
+        const updatedLists = lists.filter(list => list.id !== currentListId);
+        setLists(updatedLists);
+        const updatedCounts = { ...incompleteCounts };
+        delete updatedCounts[currentListId];
+        setIncompleteCounts(updatedCounts);
+        localStorage.setItem("lists", JSON.stringify(updatedLists));
+        localStorage.removeItem(`todos-${currentListId}`);
+        if (updatedLists.length > 0) {
+            setCurrentListId(updatedLists[0].id);
+        } else {
+            setCurrentListId(null);
+        }
+        setDeleteModalOpen(false);
+    };
+
     const getTextColor = (backgroundColor) => {
         const color = backgroundColor.substring(1);
         const rgb = parseInt(color, 16);
@@ -68,13 +88,16 @@ export const ListManager = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" style={{ flexGrow: 1 }}>
-                        Mis Listas
+                        {lists.length < 1 ? 'Agregue una lista para comenzar' : 'Listas'}
                     </Typography>
+                    <IconButton color="inherit" onClick={() => setDeleteModalOpen(true)} style={{ marginRight: '20px' }}>
+                        <DeleteIcon />
+                    </IconButton>
                     <IconButton color="inherit" onClick={() => setAddListModalOpen(true)}>
                         <AddIcon />
                     </IconButton>
                 </Toolbar>
-                {!collapsed && (
+                {!collapsed && lists.length > 0 && (
                     <Tabs value={currentListId} onChange={(e, newValue) => setCurrentListId(newValue)} variant="scrollable" scrollButtons="auto">
                         {lists.map(list => (
                             <Tab
@@ -98,12 +121,37 @@ export const ListManager = () => {
                     </Tabs>
                 )}
             </AppBar>
-            <ItemHandler listId={currentListId} updateIncompleteCount={updateIncompleteCount} />
+            {currentListId && <ItemHandler listId={currentListId} updateIncompleteCount={updateIncompleteCount} />}
+
             <AddListModal
                 open={addListModalOpen}
                 onClose={() => setAddListModalOpen(false)}
                 onSave={addList}
             />
+            {/* Delete Modal */}
+            <Modal
+                open={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                aria-labelledby="delete-modal-title"
+                aria-describedby="delete-modal-description"
+            >
+                <Box style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute', width: 400, backgroundColor: 'white', padding: '16px', boxShadow: 24 }}>
+                    <Typography id="delete-modal-title" variant="h6" component="h2" style={{ color: lists.find(list => list.id === currentListId)?.color }}>
+                        ¿Estás seguro que quieres eliminar la lista "{lists.find(list => list.id === currentListId)?.name}"?
+                    </Typography>
+                    <Typography id="delete-modal-description" variant="body1" component="p" style={{ marginTop: '8px' }}>
+                        Elementos por completar: {incompleteCounts[currentListId]}
+                    </Typography>
+                    <Box mt={2} display="flex" justifyContent="flex-end">
+                        <Button onClick={() => setDeleteModalOpen(false)} color="primary">
+                            Cancelar
+                        </Button>
+                        <Button onClick={deleteList} color="secondary">
+                            Eliminar
+                        </Button>
+                    </Box>
+                </Box>
+            </Modal>
         </>
     );
 };

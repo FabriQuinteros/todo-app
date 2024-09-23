@@ -5,15 +5,22 @@ import React, { useState } from 'react';
 
 export const AddListModal = ({ open = false, onClose = () => { }, onSave = () => { } }) => {
     const [name, setName] = useState('');
-    const [color, setColor] = useState('#ffffff');
+    const [color, setColor] = useState('');
 
     const handleSave = () => {
         if (name.trim() === '') {
             alert('El nombre de la lista no puede estar vacío.');
             return;
         }
+
+        if (!/^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/.test(color)) {
+            alert('El color no es válido.');
+            return;
+        }
         onSave({ name, color });
         onClose();
+        setName('');
+        setColor('');
     };
 
     return (
@@ -36,6 +43,8 @@ export const AddListModal = ({ open = false, onClose = () => { }, onSave = () =>
                     margin="normal"
                 />
                 <MuiColorInput
+                    label="Color"
+                    placeholder="Color"
                     value={color}
                     onChange={(value) => setColor(value)}
                     fullWidth

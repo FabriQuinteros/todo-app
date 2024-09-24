@@ -39,7 +39,11 @@ export const AddListModal = ({ open = false, onClose = () => { }, onSave = () =>
                     fullWidth
                     label="Nombre de la lista"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                        if (e.target.value.length <= 25) {
+                            setName(e.target.value);
+                        }
+                    }}
                     margin="normal"
                 />
                 <MuiColorInput

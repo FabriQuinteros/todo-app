@@ -6,6 +6,7 @@ import { TodoForm } from "./TodoForms";
 export const ItemHandler = ({ listId, updateIncompleteCount }) => {
     const [todos, setTodos] = useState(() => {
         const savedTodos = localStorage.getItem(`todos-${listId}`);
+        // Ex item: { id: uuiv4(), name: "Primer todo", isComplete: false , quantity: 1}
         return savedTodos ? JSON.parse(savedTodos) : [];
     });
     const [editItem, setEditItem] = useState(null);
@@ -24,11 +25,11 @@ export const ItemHandler = ({ listId, updateIncompleteCount }) => {
         updateIncompleteCount(listId, todos.filter(todo => !todo.isComplete).length);
     }, [todos, listId, updateIncompleteCount]);
 
-    const addTodo = text => {
-        if (!text || /^\s*$/.test(text)) {
+    const addTodo = (text, quantity) => {
+        if (!text || /^\s*$/.test(text) || isNaN(quantity) || quantity < 0) {
             return false;
         }
-        setTodos([{ id: uuiv4(), name: text, isComplete: false }, ...todos]);
+        setTodos([{ id: uuiv4(), name: text, isComplete: false, quantity }, ...todos]);
         setEditItem(null);
         return true;
     }

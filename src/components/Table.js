@@ -8,6 +8,7 @@ export const TodoTable = ({ todos, completeTodo, removeTodo, editTodo }) => {
             <Table style={{ tableLayout: 'fixed' }}>
                 <TableHead>
                     <TableRow>
+                        <TableCell>Cantidad</TableCell>
                         <TableCell>Producto</TableCell>
                         <TableCell>Acciones</TableCell>
                     </TableRow>
@@ -15,6 +16,11 @@ export const TodoTable = ({ todos, completeTodo, removeTodo, editTodo }) => {
                 <TableBody>
                     {todos.map((item) => (
                         <TableRow key={item.id} style={{ backgroundColor: item.isComplete ? '#f0f0f0' : '#fff' }}>
+                            <TableCell onClick={() => completeTodo(item.id)} style={{ cursor: 'pointer', wordWrap: 'break-word', whiteSpace: 'normal' }}>
+                                <span >
+                                    {item.quantity || 1}
+                                </span>
+                            </TableCell>
                             <TableCell onClick={() => completeTodo(item.id)} style={{ cursor: 'pointer', wordWrap: 'break-word', whiteSpace: 'normal' }}>
                                 <span style={{ textDecoration: item.isComplete ? 'line-through' : 'none' }}>
                                     {item.name}

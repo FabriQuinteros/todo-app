@@ -15,21 +15,20 @@ export const TodoForm = ({ addTodo, editItem }) => {
   useEffect(() => {
     if (editItem) {
       setPrevName(name);
-      setName(editItem.name);
+      setName(editItem.name || "");
 
       setPrevQuantity(quantity);
-      setQuantity(editItem.quantity);
+      setQuantity(editItem.quantity || 1);
     }
   }, [editItem]);
 
   const handleChange = (e) => {
     const value = e.target.value;
     const regex = /^[0-9]+(,[0-9]*)?$/;
-    console.log(regex.test(value));
     if (regex.test(value) || value === "") {
-        setQuantity(value);
+      setQuantity(value);
     }
-}
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,49 +41,49 @@ export const TodoForm = ({ addTodo, editItem }) => {
     }
   };
 
-return (
+  return (
     <div>
-        <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid2
+          container
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <form className="TodoForm" onSubmit={handleSubmit}>
             <Grid2
-                container
-                spacing={2}
-                justifyContent="center"
-                alignItems="center"
+              container
+              spacing={2}
+              justifyContent="center"
+              alignItems="center"
             >
-                <form className="TodoForm" onSubmit={handleSubmit}>
-                    <Grid2
-                        container
-                        spacing={2}
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <Grid2 xs={8} container spacing={2}>
-                            <TextField
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                id="outlined-basic"
-                                label={editItem ? "Editar item" : "Nuevo item"}
-                                variant="outlined"
-                            />
-                            <TextField
-                                value={quantity}
-                                onChange={handleChange}
-                                id="outlined-basic"
-                                label={editItem ? "Editar cantidad" : "Nueva cantidad"}
-                                variant="outlined"
-                                error={quantity < 0 ? true : false}
-                                helperText={quantity < 0 && "Solo números positivos"}
-                            />
-                        </Grid2>
-                        <Grid2 xs={2}>
-                            <Fab color="primary" aria-label="add" onClick={handleSubmit}>
-                                <AddIcon />
-                            </Fab>
-                        </Grid2>
-                    </Grid2>
-                </form>
+              <Grid2 xs={8} container spacing={2}>
+                <TextField
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  id="outlined-basic"
+                  label={editItem ? "Editar item" : "Nuevo item"}
+                  variant="outlined"
+                />
+                <TextField
+                  value={quantity}
+                  onChange={handleChange}
+                  id="outlined-basic"
+                  label={editItem ? "Cantidad" : "Cantidad"}
+                  variant="outlined"
+                  error={quantity < 0 ? true : false}
+                  helperText={quantity < 0 && "Solo números positivos"}
+                />
+              </Grid2>
+              <Grid2 xs={2}>
+                <Fab color="primary" aria-label="add" onClick={handleSubmit}>
+                  <AddIcon />
+                </Fab>
+              </Grid2>
             </Grid2>
-        </Box>
+          </form>
+        </Grid2>
+      </Box>
     </div>
-);
+  );
 };

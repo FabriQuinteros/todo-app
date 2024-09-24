@@ -1,17 +1,17 @@
 import { Box, IconButton, Tab, Tabs } from "@mui/material";
 import Badge from "@mui/material/Badge";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ItemHandler } from "./ItemHandler";
 
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 
 import { AddListModal } from "./AddListModal";
+import { DeleteListModal } from "./DeleteListModal";
 
 export const ListManager = () => {
   const [lists, setLists] = useState(() => {
@@ -23,6 +23,8 @@ export const ListManager = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [currentListId, setCurrentListId] = useState(lists[0]?.id);
   const [addListModalOpen, setAddListModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [listToEdit, setListToEdit] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const getIncompleteTodosCount = (listId) => {
@@ -65,16 +67,54 @@ export const ListManager = () => {
     setDeleteModalOpen(false);
   };
 
-const getTextColor = (backgroundColor) => {
-    const color = backgroundColor.substring(1);
-    const rgb = parseInt(color, 16);
-    const r = (rgb >> 16) & 0xff;
-    const g = (rgb >> 8) & 0xff;
-    const b = (rgb >> 0) & 0xff;
-    const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        return luma > 128 ? 'black' : 'white';
-};
+  const openEditListModal = (list) => {
+    setIsEditMode(true);
+    setListToEdit(list);
+    setAddListModalOpen(true);
+  };
 
+  useEffect(() => {
+    if (!addListModalOpen) {
+      setIsEditMode(false);
+    }
+  }, [addListModalOpen]);
+
+  const editList = (id, name, color) => {
+    const updatedLists = lists.map((list) => {
+      if (list.id === id) {
+        list.name = name;
+        list.color = color;
+      }
+      return list;
+    });
+    setLists(updatedLists);
+    localStorage.setItem("lists", JSON.stringify(updatedLists));
+    setIsEditMode(false);
+  };
+
+  const getTextColor = (backgroundColor) => {
+    const rgbValues = backgroundColor
+      .replace("rgb(", "")
+      .replace(")", "")
+      .split(",")
+      .map(Number);
+
+    const [r, g, b] = rgbValues;
+
+    const toLinear = (value) => {
+      value /= 255;
+      return value <= 0.03928
+        ? value / 12.92
+        : Math.pow((value + 0.055) / 1.055, 2.4);
+    };
+
+    const rLinear = toLinear(r);
+    const gLinear = toLinear(g);
+    const bLinear = toLinear(b);
+    const luma = 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+
+    return luma > 0.179 ? "black" : "white";
+  };
 
   const updateIncompleteCount = (listId, count) => {
     setIncompleteCounts({ ...incompleteCounts, [listId]: count });
@@ -104,6 +144,19 @@ const getTextColor = (backgroundColor) => {
               <DeleteIcon />
             </IconButton>
           )}
+          {currentListId && (
+            <IconButton
+              color="inherit"
+              onClick={() =>
+                openEditListModal(
+                  lists.find((list) => list.id === currentListId)
+                )
+              }
+              style={{ marginRight: "20px" }}
+            >
+              <EditIcon />
+            </IconButton>
+          )}
           <IconButton color="inherit" onClick={() => setAddListModalOpen(true)}>
             <AddIcon />
           </IconButton>
@@ -120,7 +173,7 @@ const getTextColor = (backgroundColor) => {
                 key={list.id}
                 label={
                   <Box display="flex" alignItems="center">
-                    <span style={{ marginRight: "12px" }}>{list.name}</span>
+                    <span style={{ marginRight: "15px" }}>{list.name}</span>
                     <Badge
                       badgeContent={incompleteCounts[list.id]}
                       color="success"
@@ -135,9 +188,10 @@ const getTextColor = (backgroundColor) => {
                     list.id === currentListId
                       ? getTextColor(list.color)
                       : "black",
-                  marginRight: "3px",
+                  marginLeft: "5px",
                   borderRadius: list.id === currentListId ? "3px" : "20px",
                   transition: "all 0.3s ease-in-out",
+                  textTransform: "none",
                 }}
               />
             ))}
@@ -155,55 +209,18 @@ const getTextColor = (backgroundColor) => {
         open={addListModalOpen}
         onClose={() => setAddListModalOpen(false)}
         onSave={addList}
+        onEdit={editList}
+        isEditMode={isEditMode}
+        listToEdit={listToEdit}
       />
-      {/* Delete Modal */}
-      <Modal
+      <DeleteListModal
+        lists={lists}
+        deleteList={deleteList}
+        incompleteCounts={incompleteCounts[currentListId]}
+        currentListId={currentListId}
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        aria-labelledby="delete-modal-title"
-        aria-describedby="delete-modal-description"
-      >
-        <Box
-          style={{
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            position: "absolute",
-            width: 400,
-            backgroundColor: "white",
-            padding: "16px",
-            boxShadow: 24,
-          }}
-        >
-          <Typography
-            id="delete-modal-title"
-            variant="h6"
-            component="h2"
-            style={{
-              color: lists.find((list) => list.id === currentListId)?.color,
-            }}
-          >
-            ¿Estás seguro que quieres eliminar la lista "
-            {lists.find((list) => list.id === currentListId)?.name}"?
-          </Typography>
-          <Typography
-            id="delete-modal-description"
-            variant="body1"
-            component="p"
-            style={{ marginTop: "8px" }}
-          >
-            Elementos por completar: {incompleteCounts[currentListId]}
-          </Typography>
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Button onClick={() => setDeleteModalOpen(false)} color="primary">
-              Cancelar
-            </Button>
-            <Button onClick={deleteList} color="secondary">
-              Eliminar
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+      />
     </>
   );
 };

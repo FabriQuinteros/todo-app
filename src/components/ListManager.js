@@ -16,23 +16,20 @@ import { DeleteListModal } from "./DeleteListModal";
 export const ListManager = () => {
   const [lists, setLists] = useState(() => {
     const savedLists = localStorage.getItem("lists");
-    // Ex item: { id: uuidv4(), name: "Primer lista", color: "#ffffff" }
+    // Ex item: { id: uuidv4(), name: "Primer lista", color: "rgba(255, 99, 71, 0.5)" }
     return savedLists ? JSON.parse(savedLists) : [];
   });
-
   const [collapsed, setCollapsed] = useState(false);
   const [currentListId, setCurrentListId] = useState(lists[0]?.id);
   const [addListModalOpen, setAddListModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [listToEdit, setListToEdit] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
   const getIncompleteTodosCount = (listId) => {
     const savedTodos = localStorage.getItem(`todos-${listId}`);
     const todos = savedTodos ? JSON.parse(savedTodos) : [];
     return todos.filter((todo) => !todo.isComplete).length;
   };
-
   const [incompleteCounts, setIncompleteCounts] = useState(() => {
     const counts = {};
     lists.forEach((list) => {
@@ -44,6 +41,12 @@ export const ListManager = () => {
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(lists));
   }, [lists]);
+
+  useEffect(() => {
+    if (!addListModalOpen) {
+      setIsEditMode(false);
+    }
+  }, [addListModalOpen]);
 
   const addList = ({ name, color }) => {
     const newList = { id: uuidv4(), name: name, color: color };
@@ -73,12 +76,6 @@ export const ListManager = () => {
     setAddListModalOpen(true);
   };
 
-  useEffect(() => {
-    if (!addListModalOpen) {
-      setIsEditMode(false);
-    }
-  }, [addListModalOpen]);
-
   const editList = (id, name, color) => {
     const updatedLists = lists.map((list) => {
       if (list.id === id) {
@@ -93,13 +90,14 @@ export const ListManager = () => {
   };
 
   const getTextColor = (backgroundColor) => {
-    const rgbValues = backgroundColor
+    const rgbaValues = backgroundColor
+      .replace("rgba(", "")
       .replace("rgb(", "")
       .replace(")", "")
       .split(",")
       .map(Number);
 
-    const [r, g, b] = rgbValues;
+    const [r, g, b] = rgbaValues;
 
     const toLinear = (value) => {
       value /= 255;

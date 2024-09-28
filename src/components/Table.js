@@ -39,11 +39,14 @@ export const TodoTable = ({
       <Table style={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
-            <TableCell>Cantidad</TableCell>
-            <TableCell onClick={handleSort} style={{ cursor: "pointer" }}>
+            <TableCell style={{ width: "15%" }}>Cant.</TableCell>
+            <TableCell
+              onClick={handleSort}
+              style={{ cursor: "pointer", width: "40%" }}
+            >
               Producto {order === "asc" ? "↑" : "↓"}
             </TableCell>
-            <TableCell>Acciones</TableCell>
+            <TableCell style={{ width: "45%" }}>Acciones</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -58,6 +61,7 @@ export const TodoTable = ({
                   cursor: "pointer",
                   wordWrap: "break-word",
                   whiteSpace: "normal",
+                  width: "15%",
                 }}
               >
                 <span>{item.quantity || 1}</span>

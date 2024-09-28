@@ -29,7 +29,9 @@ export const AddListModal = ({
       return;
     }
 
-    if (!/^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/.test(color)) {
+    if (
+      !/^rgba?\(\d{1,3}, \d{1,3}, \d{1,3}(, \d(\.\d{1,2})?)?\)$/.test(color)
+    ) {
       alert("El color no es válido.");
       return;
     }
@@ -51,7 +53,8 @@ export const AddListModal = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
+          width: "95%",
+          maxWidth: "400px",
           bgcolor: "background.paper",
           boxShadow: 24,
           p: 4,

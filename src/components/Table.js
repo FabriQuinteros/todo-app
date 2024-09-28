@@ -28,6 +28,8 @@ export const TodoTable = ({
       return a.name.localeCompare(b.name);
     } else if (order === "desc") {
       return b.name.localeCompare(a.name);
+    } else {
+      return 0;
     }
   });
 

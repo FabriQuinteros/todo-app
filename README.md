@@ -38,7 +38,7 @@ A simple shopping list application built with React, applying fundamental concep
 2. Navigate to the project directory:
 
    ```bash
-   cd shopping-list-app
+   cd todo-app
    ```
 
 3. Install the dependencies:

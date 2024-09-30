@@ -32,7 +32,7 @@ A simple shopping list application built with React, applying fundamental concep
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/shopping-list-app.git
+   git clone https://github.com/fabriquinteros/todo-app.git
    ```
 
 2. Navigate to the project directory:
